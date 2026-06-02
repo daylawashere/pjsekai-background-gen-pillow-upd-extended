@@ -7,7 +7,7 @@ import importlib.resources as pkg_resources
 
 def load_image(path: str) -> Image.Image:
     file_bytes = (
-        pkg_resources.files("pjsk_background_gen_PIL")
+        pkg_resources.files("pjsk_background_gen_PIL_EXTEND")
         .joinpath("assets", path)
         .read_bytes()
     )
