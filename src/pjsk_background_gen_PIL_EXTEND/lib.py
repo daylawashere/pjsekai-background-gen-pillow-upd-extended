@@ -98,7 +98,7 @@ def render(target: Image.Image, enhance: bool = False) -> Image.Image:
     return render_v3(target, enhance=enhance)
 
 
-def render_v3(target: Image.Image, enhance: bool = True) -> Image.Image:
+def render_v3(target: Image.Image, enhance: bool = True, to_render: str = "") -> Image.Image:
     target = target.convert("RGBA")
     assets = get_v3_assets()
     base = assets.base.copy()
@@ -138,7 +138,18 @@ def render_v3(target: Image.Image, enhance: bool = True) -> Image.Image:
 
     side_jackets = mask(side_jackets, assets.side_mask)
     center = mask(center, assets.center_mask)
-
+    #Please I know this is shitty implementation but I needed a way to get all these individually ok
+    match to_render:
+        case "side_jackets":
+            return side_jackets
+        case "center":
+            return assets.windows.alpha_composite(center)
+        case "base":
+            return base
+        case "bottom":
+            return assets.bottom
+        case _:
+            pass
     for img in [side_jackets, assets.side_cover, assets.windows, center, assets.bottom]:
         base.alpha_composite(img)
     if enhance:
@@ -149,7 +160,7 @@ def render_v3(target: Image.Image, enhance: bool = True) -> Image.Image:
     return base
 
 
-def render_v1(target: Image.Image, enhance: bool = False) -> Image.Image:
+def render_v1(target: Image.Image, enhance: bool = False, to_render: str = "") -> Image.Image:
     target = target.convert("RGBA")
     assets = get_v1_assets()
     base = assets.base.copy()
@@ -180,6 +191,16 @@ def render_v1(target: Image.Image, enhance: bool = False) -> Image.Image:
 
     side_jackets = mask(side_jackets, assets.side_mask)
 
+    #Please I know this is shitty implementation but I needed a way to get all these individually ok
+    match to_render:
+        case "side_jackets":
+            return side_jackets
+        case "center":
+            return center.alpha_composite(assets.frames)
+        case "base":
+            return base
+        case _:
+            pass
     for img in [side_jackets, center, assets.frames]:
         base.alpha_composite(img)
     if enhance:

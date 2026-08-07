@@ -26,3 +26,6 @@ def test_render_outputs():
     result_v1 = pjsk_background_gen_PIL_EXTEND.render_v1(image)
     result_v1.save("test_out/v1.png")
     assert result_v1 is not None
+    
+    for elements in ["side_jackets", "center", "base", "bottom"]:
+        results_v3 = pjsk_background_gen_PIL_EXTEND.render_v3(image, False, elements).save(f"test_out/v3_{elements}.png")
